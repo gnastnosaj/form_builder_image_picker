@@ -93,6 +93,8 @@ class FormBuilderImagePicker extends FormBuilderFieldDecoration<List<dynamic>> {
   final Widget Function(BuildContext context, Widget displayImage, int index)?
       transformImageWidget;
 
+  final Widget Function(BuildContext, Object, StackTrace?)? errorBuilder;
+
   /// Icon for camera option on bottom sheet
   final Widget cameraIcon;
 
@@ -143,6 +145,7 @@ class FormBuilderImagePicker extends FormBuilderFieldDecoration<List<dynamic>> {
     super.focusNode,
     this.loadingWidget,
     this.transformImageWidget,
+    this.errorBuilder,
     this.showDecoration = true,
     this.placeholderWidget,
     this.previewAutoSizeWidth = true,
@@ -272,13 +275,14 @@ class FormBuilderImagePicker extends FormBuilderFieldDecoration<List<dynamic>> {
               final displayWidget = displayItem is Widget
                   ? displayItem
                   : displayItem is ImageProvider
-                      ? Image(image: displayItem, fit: fit)
+                      ? Image(image: displayItem, fit: fit, errorBuilder: errorBuilder)
                       : displayItem is Uint8List
-                          ? Image.memory(displayItem, fit: fit)
+                          ? Image.memory(displayItem, fit: fit, errorBuilder: errorBuilder)
                           : displayItem is String
                               ? Image.network(
                                   displayItem,
                                   fit: fit,
+                                  errorBuilder: errorBuilder
                                 )
                               : XFileImage(
                                   file: displayItem,
