@@ -272,16 +272,24 @@ class FormBuilderImagePicker extends FormBuilderFieldDecoration<List<dynamic>> {
                 'Consider using displayCustomType to handle the type: ${displayItem.runtimeType}',
               );
 
+              final loadingBuilder = loadingWidget != null ? (context, widget, event) {
+                if (event == null) {
+                  return widget as Widget;
+                }
+                return loadingWidget(context);
+              } : null;
+
               final displayWidget = displayItem is Widget
                   ? displayItem
                   : displayItem is ImageProvider
-                      ? Image(image: displayItem, fit: fit, errorBuilder: errorBuilder)
+                      ? Image(image: displayItem, fit: fit, loadingBuilder: loadingBuilder, errorBuilder: errorBuilder)
                       : displayItem is Uint8List
                           ? Image.memory(displayItem, fit: fit, errorBuilder: errorBuilder)
                           : displayItem is String
                               ? Image.network(
                                   displayItem,
                                   fit: fit,
+                                  loadingBuilder: loadingBuilder,
                                   errorBuilder: errorBuilder
                                 )
                               : XFileImage(
