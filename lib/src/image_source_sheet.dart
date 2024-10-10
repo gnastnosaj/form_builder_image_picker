@@ -38,6 +38,7 @@ class ImageSourceBottomSheet extends StatefulWidget {
   final Widget? galleryLabel;
   final EdgeInsets? bottomSheetPadding;
   final bool preventPop;
+  final ValueChanged<bool>? onPickImage;
 
   final Widget Function(
           FutureVoidCallBack cameraPicker, FutureVoidCallBack galleryPicker)?
@@ -47,6 +48,7 @@ class ImageSourceBottomSheet extends StatefulWidget {
     super.key,
     this.remainingImages,
     this.preventPop = false,
+    this.onPickImage,
     this.maxHeight,
     this.maxWidth,
     this.imageQuality,
@@ -71,6 +73,7 @@ class ImageSourceBottomSheetState extends State<ImageSourceBottomSheet> {
   Future<void> _onPickImage(ImageSource source) async {
     if (_isPickingImage) return;
     _isPickingImage = true;
+    widget.onPickImage?.call(_isPickingImage);
     final imagePicker = ImagePicker();
     try {
       if (source == ImageSource.camera || widget.remainingImages == 1) {
@@ -82,6 +85,7 @@ class ImageSourceBottomSheetState extends State<ImageSourceBottomSheet> {
           imageQuality: widget.imageQuality,
         );
         _isPickingImage = false;
+        widget.onPickImage?.call(_isPickingImage);
         if (pickedFile != null) {
           widget.onImageSelected([pickedFile]);
         }
@@ -92,12 +96,14 @@ class ImageSourceBottomSheetState extends State<ImageSourceBottomSheet> {
           imageQuality: widget.imageQuality,
         );
         _isPickingImage = false;
+        widget.onPickImage?.call(_isPickingImage);
         if (pickedFiles.isNotEmpty) {
           widget.onImageSelected(pickedFiles);
         }
       }
     } catch (e) {
       _isPickingImage = false;
+      widget.onPickImage?.call(_isPickingImage);
       rethrow;
     }
   }

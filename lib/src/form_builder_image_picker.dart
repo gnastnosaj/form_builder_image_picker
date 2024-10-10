@@ -121,6 +121,8 @@ class FormBuilderImagePicker extends FormBuilderFieldDecoration<List<dynamic>> {
   ///use optionsBuilder to return a widget of your choice
   final ValueChanged<ImageSourceBottomSheet>? onTap;
 
+  final ValueChanged<bool>? onPickImage;
+
   /// use this callback if you want custom view for options
   /// call cameraPicker() to picks image from camera
   /// call galleryPicker() to picks image from gallery
@@ -172,6 +174,7 @@ class FormBuilderImagePicker extends FormBuilderFieldDecoration<List<dynamic>> {
     this.bottomSheetPadding = EdgeInsets.zero,
     this.placeholderImage,
     this.onTap,
+    this.onPickImage,
     this.optionsBuilder,
     this.availableImageSources = const [
       ImageSourceOption.camera,
@@ -223,6 +226,7 @@ class FormBuilderImagePicker extends FormBuilderFieldDecoration<List<dynamic>> {
                       maxHeight: maxHeight,
                       maxWidth: maxWidth,
                       preventPop: preventPop,
+                      onPickImage: onPickImage,
                       remainingImages: remainingImages,
                       imageQuality: imageQuality,
                       preferredCameraDevice: preferredCameraDevice,
