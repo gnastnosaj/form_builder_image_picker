@@ -40,9 +40,7 @@ class ImageSourceBottomSheet extends StatefulWidget {
   final bool preventPop;
   final ValueChanged<bool>? onPickImage;
 
-  final Widget Function(
-          FutureVoidCallBack cameraPicker, FutureVoidCallBack galleryPicker)?
-      optionsBuilder;
+  final Widget Function(FutureVoidCallBack cameraPicker, FutureVoidCallBack galleryPicker)? optionsBuilder;
 
   const ImageSourceBottomSheet({
     super.key,
@@ -74,6 +72,15 @@ class ImageSourceBottomSheetState extends State<ImageSourceBottomSheet> {
     if (_isPickingImage) return;
     _isPickingImage = true;
     widget.onPickImage?.call(_isPickingImage);
+
+    final entry = OverlayEntry(
+      builder: (context) => const AbsorbPointer(
+        child: SizedBox.expand(),
+      ),
+    );
+
+    Overlay.of(context).insert(entry);
+
     final imagePicker = ImagePicker();
     try {
       if (source == ImageSource.camera || widget.remainingImages == 1) {
@@ -105,6 +112,8 @@ class ImageSourceBottomSheetState extends State<ImageSourceBottomSheet> {
       _isPickingImage = false;
       widget.onPickImage?.call(_isPickingImage);
       rethrow;
+    } finally {
+      entry.remove();
     }
   }
 
